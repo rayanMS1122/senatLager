@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: Senat Lager REST API
+  version: "1.0"
+  description: |
+    REST API für Scanner- und Lagerbuchungen (Senat-Style).
+servers:
+  - url: http://localhost:8086
+
+paths:
+  /api/v1/stock/search:
+    get:
+      summary: Lagermaterial suchen (EAN / Nummer)
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Gescannter Code (EAN oder Nummer)
+        - name: mode
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ean, nr, nr_ean, ean_nr]
+          description: Suchmodus (Default aus Betriebsdaten)
+        - name: hilti
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum: [0, 1]
+          description: Hilti-Modus (Default aus Betriebsdaten)
+      responses:
+        "200":
+          description: Lagermaterial gefunden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lagMatId:
+                    type: integer
+                  ean:
+                    type: string
+                  nr:
+                    type: string
+                  bezeichnung:
+                    type: string
+                  bestand:
+                    type: number
+                  einheit:
+                    type: string
+        "404":
+          description: Lagermaterial nicht gefunden
+
+  /api/v1/stock/book:
+    post:
+      summary: Lagerbuchung durchführen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, menge]
+              properties:
+                code:
+                  type: string
+                menge:
+                  type: number
+                mode:
+                  type: integer
+                  description: 1=Abgang, 2=Zugang, 3=Inventur
+      responses:
+        "201":
+          description: Buchung erfolgreich
+        "409":
+          description: Fachlicher Fehler (z.B. Bestand)
