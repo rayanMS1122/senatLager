@@ -1,12 +1,12 @@
 // main.dart
 import 'dart:async';
 
-import 'package:senat_lager/api_service.dart';
-import 'package:senat_lager/constants.dart'; // ← NEU: Dein Design-System
-import 'package:senat_lager/login_page.dart';
-import 'package:senat_lager/scanner_controller.dart';
-import 'package:senat_lager/scanner_page.dart';
-import 'package:senat_lager/settings_page.dart';
+import 'package:senatLager/api_service.dart';
+import 'package:senatLager/constants.dart'; // ← NEU: Dein Design-System
+import 'package:senatLager/login_page.dart';
+import 'package:senatLager/scanner_controller.dart';
+import 'package:senatLager/scanner_page.dart';
+import 'package:senatLager/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

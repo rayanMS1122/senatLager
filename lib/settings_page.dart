@@ -138,13 +138,17 @@ class SettingsPage extends StatelessWidget {
                     onPressed: isSaving
                         ? null
                         : () async {
+                            Get.snackbar(
+                                'Bitte warten', 'Wir verbinden Sie mit server',
+                                backgroundColor: AppColors.warningLight,
+                                colorText: Colors.white);
                             setState(() => isSaving = true);
 
                             final address = ctrl.text.trim();
                             if (address.isEmpty) {
                               Get.snackbar(
                                   'Fehler', 'Bitte Server-Adresse eingeben',
-                                  backgroundColor: Colors.red.withOpacity(0.9),
+                                  backgroundColor: AppColors.danger,
                                   colorText: Colors.white);
                               setState(() => isSaving = false);
                               return;
@@ -158,7 +162,7 @@ class SettingsPage extends StatelessWidget {
                               Get.snackbar(
                                 'Verbindung fehlgeschlagen',
                                 'Der Server ist nicht erreichbar. Bitte IP/Port prüfen.',
-                                backgroundColor: Colors.red.withOpacity(0.9),
+                                backgroundColor: AppColors.danger,
                                 colorText: Colors.white,
                                 snackPosition: SnackPosition.BOTTOM,
                                 margin: EdgeInsets.all(16.w),

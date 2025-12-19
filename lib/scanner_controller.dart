@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:senat_lager/api_service.dart';
+import 'package:senatLager/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
