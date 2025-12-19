@@ -1,12 +1,12 @@
 // main.dart
 import 'dart:async';
 
-import 'package:barcode_scaner/api_service.dart';
-import 'package:barcode_scaner/constants.dart'; // ← NEU: Dein Design-System
-import 'package:barcode_scaner/login_page.dart';
-import 'package:barcode_scaner/scanner_controller.dart';
-import 'package:barcode_scaner/scanner_page.dart';
-import 'package:barcode_scaner/settings_page.dart';
+import 'package:senat_lager/api_service.dart';
+import 'package:senat_lager/constants.dart'; // ← NEU: Dein Design-System
+import 'package:senat_lager/login_page.dart';
+import 'package:senat_lager/scanner_controller.dart';
+import 'package:senat_lager/scanner_page.dart';
+import 'package:senat_lager/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
