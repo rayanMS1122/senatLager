@@ -163,7 +163,7 @@ class ScannerPage extends GetView<ScannerController> {
                       ],
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.flash_on,
+                      icon: Icon(Icons.flashlight_on,
                           color: Colors.white, size: 20.sp),
                       onPressed: () => controller.cam.toggleTorch(),
                     ),
@@ -207,6 +207,31 @@ class ScannerPage extends GetView<ScannerController> {
                             Icons.person_outline,
                             ApiService.getUser()?['name'] ?? '-',
                           ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 10.h,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.primary.withOpacity(0.08),
+                            AppColors.primaryLight.withOpacity(0.05),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(10.r),
+                        border: Border.all(
+                          color: AppColors.primary.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           _buildInfoChip(
                             Icons.description_outlined,
                             ApiService.getDoc()?['name'] ?? '-',
@@ -215,7 +240,6 @@ class ScannerPage extends GetView<ScannerController> {
                       ),
                     ),
                     SizedBox(height: 16.h),
-
                     // Barcode Card - moderne Glasmorphism
                     GestureDetector(
                       onTap: () => _showManualInput(context),
