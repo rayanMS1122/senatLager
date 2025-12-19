@@ -12,7 +12,6 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ctrl = TextEditingController(
         text: ApiService.getServer() ?? '192.168.90.50:8086');
-    bool isSaving = false;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -127,9 +126,11 @@ class SettingsPage extends StatelessWidget {
 
               SizedBox(height: 40.h),
 
-              // Speichern Button
+              // Speichern Button mit Prüfung
               StatefulBuilder(
                 builder: (context, setState) {
+                  bool isSaving = false;
+
                   return _buildGradientButton(
                     label: 'Speichern',
                     icon: Icons.save_rounded,
@@ -138,23 +139,54 @@ class SettingsPage extends StatelessWidget {
                         ? null
                         : () async {
                             setState(() => isSaving = true);
-                            ApiService.setServer(ctrl.text.trim());
-                            await Future.delayed(const Duration(
-                                milliseconds: 600)); // Kleine Simulation
-                            setState(() => isSaving = false);
+
+                            final address = ctrl.text.trim();
+                            if (address.isEmpty) {
+                              Get.snackbar(
+                                  'Fehler', 'Bitte Server-Adresse eingeben',
+                                  backgroundColor: Colors.red.withOpacity(0.9),
+                                  colorText: Colors.white);
+                              setState(() => isSaving = false);
+                              return;
+                            }
+
+                            // Verbindung prüfen
+                            bool reachable =
+                                await ApiService.checkConnectivity(address);
+
+                            if (!reachable) {
+                              Get.snackbar(
+                                'Verbindung fehlgeschlagen',
+                                'Der Server ist nicht erreichbar. Bitte IP/Port prüfen.',
+                                backgroundColor: Colors.red.withOpacity(0.9),
+                                colorText: Colors.white,
+                                snackPosition: SnackPosition.BOTTOM,
+                                margin: EdgeInsets.all(16.w),
+                                icon: const Icon(Icons.warning,
+                                    color: Colors.white),
+                                duration: const Duration(seconds: 5),
+                              );
+                              setState(() => isSaving = false);
+                              return;
+                            }
+
+                            // Erfolgreich → speichern
+                            await ApiService.setServer(address);
 
                             Get.offAllNamed('/login');
                             Get.snackbar(
                               'Erfolg',
-                              'Server erfolgreich konfiguriert',
+                              'Server erfolgreich konfiguriert und erreichbar',
                               backgroundColor:
                                   AppColors.success.withOpacity(0.9),
                               colorText: Colors.white,
                               snackPosition: SnackPosition.BOTTOM,
                               margin: EdgeInsets.all(16.w),
-                              icon:
-                                  Icon(Icons.check_circle, color: Colors.white),
+                              icon: const Icon(Icons.check_circle,
+                                  color: Colors.white),
                             );
+
+                            setState(() => isSaving = false);
                           },
                   );
                 },
@@ -162,7 +194,6 @@ class SettingsPage extends StatelessWidget {
 
               SizedBox(height: 16.h),
 
-              // Zurück zur Anmeldung (falls gewünscht)
               TextButton(
                 onPressed: () => Get.back(),
                 child: Text(
@@ -181,6 +212,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  // _buildGradientButton bleibt unverändert
   Widget _buildGradientButton({
     required String label,
     required IconData icon,
@@ -220,7 +252,7 @@ class SettingsPage extends StatelessWidget {
                 ? SizedBox(
                     height: 28.h,
                     width: 28.w,
-                    child: CircularProgressIndicator(
+                    child: const CircularProgressIndicator(
                       strokeWidth: 3,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),

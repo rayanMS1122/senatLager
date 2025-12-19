@@ -34,6 +34,35 @@ class ApiService {
     print('Base URL: $baseUrl');
   }
 
+  static Future<bool> checkConnectivity(String address) async {
+    String url;
+    String cleaned = address
+        .trim()
+        .replaceAll(RegExp(r'^https?://'), '')
+        .replaceAll(RegExp(r'/$'), '');
+    if (cleaned.contains(':')) {
+      url = 'http://$cleaned';
+    } else {
+      url = 'http://$cleaned:8086';
+    }
+
+    // Wir testen nur die Basis-URL mit einem einfachen GET
+    // Wichtig: Wir prüfen NICHT auf Status 200, sondern nur, ob eine Antwort kommt (kein Netzwerkfehler)
+    try {
+      final response =
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 6));
+
+      print('Connectivity-Check: $url → Status: ${response.statusCode}');
+
+      // Jede Antwort (auch 404, 500, etc.) bedeutet: Server ist erreichbar!
+      // Nur Timeout oder Exception = nicht erreichbar
+      return true;
+    } catch (e) {
+      print('Connectivity-Check fehlgeschlagen: $e');
+      return false;
+    }
+  }
+
   static Future<void> setServer(String addr) async {
     await prefs.setString('server', addr.trim());
     await init();
